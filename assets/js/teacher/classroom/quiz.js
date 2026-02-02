@@ -1,0 +1,91 @@
+$(document).ready(function () {
+  const params = new URLSearchParams(window.location.search);
+  const params_id = params.get("id");
+  const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
+console.log(userLogged)
+  // ===============================
+  // ADD QUIZ
+  // ===============================
+  $("#addQuizNameBtn").on("click", function () {
+    const quizName = $("#quizName").val().trim();
+
+    if (!quizName) {
+      alert("Quiz name is required");
+      return;
+    }
+
+    firebase
+      .database()
+      .ref(`manage_classroom/${params_id}`)
+      .once("value")
+      .then(function (snapshot) {
+        const manageClassroom = snapshot.val();
+        if (!manageClassroom) return;
+
+        const data = {
+          quiz_name: quizName,
+          manage_classroom_id: params_id,
+          classroom_name: manageClassroom.classroom_name,
+          teacher_id: manageClassroom.teacher_id,
+          created_at: firebase.database.ServerValue.TIMESTAMP,
+        };
+
+        firebase
+          .database()
+          .ref("quiz")
+          .push(data)
+          .then(() => {
+            $("#quizName").val("");
+            $("#addQuizNameModal").hide();
+            console.log("Quiz added successfully");
+          })
+          .catch((error) => {
+            console.error("Error saving quiz:", error);
+          });
+      });
+  });
+
+  // ===============================
+  // LOAD QUIZZES (FIXED DUPLICATION)
+  // ===============================
+  firebase
+    .database()
+    .ref("quiz")
+    .on("value", function (snapshot) {
+      const quizNames = snapshot.val();
+
+      // ✅ IMPORTANT: clear before append
+      $("#listOfQuizName").empty();
+
+      if (!quizNames) {
+        $("#listOfQuizName").html(`
+          <p class="text-gray-500 text-center">No quizzes found.</p>
+        `);
+        return;
+      }
+
+      $.each(quizNames, function (id, quiz) {
+        if (
+          quiz.manage_classroom_id === params_id &&
+          quiz.teacher_id === userLogged.id
+        ) {
+          $("#listOfQuizName").append(`
+            <div class="mb-4">
+              <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+                <h4 class="mb-2 text-xl font-medium text-gray-800">
+                  ${quiz.quiz_name}
+                </h4>
+
+                <a
+                  href="/teacher/questions.html?id=${id}"
+                  class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white hover:bg-brand-600"
+                >
+                  Manage Quiz
+                </a>
+              </div>
+            </div>
+          `);
+        }
+      });
+    });
+});
