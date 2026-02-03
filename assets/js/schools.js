@@ -1,18 +1,18 @@
 $(document).ready(function () {
-  let classroomsData = []; // store all classrooms
+  let SchoolsData = []; // store all Schools
   let currentPage = 1;
   const rowsPerPage = 5;
 
-  const $classroomsTable = $("#classroomsTable");
+  const $schoolsTable = $("#schoolsTable");
   const $searchInput = $("#searchInput");
   const $paginationList = $("#paginationList"); // your pagination container
 
   // Function to render table
   function renderTable(data) {
-    $classroomsTable.empty();
+    $schoolsTable.empty();
     if (!data.length) {
-      $classroomsTable.append(
-        `<tr><td colspan="3" class="text-center py-4">No classrooms found.</td></tr>`,
+      $schoolsTable.append(
+        `<tr><td colspan="3" class="text-center py-4">No Schools found.</td></tr>`,
       );
       $("#prevPage, #nextPage").hide(); // hide buttons if no data
       return;
@@ -22,17 +22,17 @@ $(document).ready(function () {
     const end = start + rowsPerPage;
     const pageData = data.slice(start, end);
 
-    $.each(pageData, function (id, classroom) {
-      const date = classroom.created_at
-        ? new Date(classroom.created_at).toLocaleString()
+    $.each(pageData, function (id, School) {
+      const date = School.created_at
+        ? new Date(School.created_at).toLocaleString()
         : "";
-      console.log(classroom.id);
-      $classroomsTable.append(`
+      console.log(School.id);
+      $schoolsTable.append(`
       <tr>
         <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
           <div>
             <span class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
-              ${classroom.classroom_name}
+              ${School.school_name}
             </span>
           </div>
         </td>
@@ -73,8 +73,8 @@ $(document).ready(function () {
                                 x-ref="dropdown"
                               >
                                 <button
-                                data-id="${classroom.id}"
-                                id="removeClassroomBtn"
+                                data-id="${School.id}"
+                                id="removeSchoolBtn"
                                   class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                                 >
                                   Delete
@@ -114,7 +114,7 @@ $(document).ready(function () {
     $paginationList.find("a").on("click", function (e) {
       e.preventDefault();
       currentPage = parseInt($(this).text());
-      renderTable(filteredClassrooms());
+      renderTable(filteredSchools());
     });
 
     if (currentPage <= 1) {
@@ -130,73 +130,74 @@ $(document).ready(function () {
     }
   }
 
-  function filteredClassrooms() {
+  function filteredSchools() {
     const query = ($searchInput.val() || "").toLowerCase(); // ensure input is string
-    return classroomsData.filter((s) => {
+    return SchoolsData.filter((s) => {
       if (!s) return false; // skip undefined/null entries
-      const name = s.classroom_name || ""; // ensure classroom_name is string
+      const name = s.School_name || ""; // ensure School_name is string
       return name.toLowerCase().includes(query);
     });
   }
 
   $searchInput.on("input", function () {
     currentPage = 1;
-    renderTable(filteredClassrooms());
+    renderTable(filteredSchools());
   });
 
-  database.ref("classrooms").on("value", function (snapshot) {
-    const classrooms = snapshot.val();
-    console.log(classrooms);
-    classroomsData = [];
-    if (classrooms) {
-      $.each(classrooms, function (id, classroom) {
-        classroomsData.push({
+  database.ref("schools").on("value", function (snapshot) {
+    const schools = snapshot.val();
+    console.log(schools);
+    SchoolsData = [];
+    if (schools) {
+      $.each(schools, function (id, school) {
+        SchoolsData.push({
           id: id, // Firebase unique key
-          ...classroom, // classroom data
+          ...school, // School data
         });
       });
     }
     currentPage = 1;
-    renderTable(filteredClassrooms());
+    renderTable(filteredSchools());
   });
 
-  $("#addClassroomBtn").on("click", function () {
+  $("#addSchoolBtn").on("click", function () {
     const data = {
-      classroom_name: $("#classroomName").val(),
+      school_name: $("#schoolName").val(),
       created_at: firebase.database.ServerValue.TIMESTAMP,
     };
     firebase
       .database()
-      .ref("classrooms")
+      .ref("schools")
       .push()
       .set(data, (error) => {
         if (error) {
           console.log("Data could not be saved.", error);
         } else {
           console.log("Data saved successfully!");
-          $("#classroomName").val("");
-          $("#addClassroomModal").attr("style", "display:none;");
+          $("#schoolName").val("");
+          $("#addSchoolModal").attr("style", "display:none;"); 
         }
       });
   });
 
   $("#prevPage").on("click", () => {
     currentPage--;
-    renderTable(filteredClassrooms());
+    renderTable(filteredSchools());
   });
 
   $("#nextPage").on("click", () => {
     currentPage++;
-    renderTable(filteredClassrooms());
+    renderTable(filteredSchools());
   });
 
-  $("#classroomsTable").on("click", "#removeClassroomBtn", function () {
-    const classroomId = $(this).data("id");
-    // console.log(classroomId);
-    removeClassroom(classroomId);
+
+  $('#schoolsTable').on('click', '#removeSchoolBtn', function() {
+    const SchoolId = $(this).data('id');
+    // console.log(SchoolId);
+    removeSchool(SchoolId);
   });
-  function removeClassroom(classroomId) {
-    database.ref("classrooms/" + classroomId).remove((error) => {
+  function removeSchool(SchoolId) {
+    database.ref("Schools/" + SchoolId).remove((error) => {
       if (error) {
         console.log("Data could not be deleted.", error);
       } else {
@@ -204,44 +205,4 @@ $(document).ready(function () {
       }
     });
   }
-
-  // database.ref("schools").on("value", function (snapshot) {
-  //   const schools = snapshot.val();
-  //   console.log(schools);
-  //   SchoolsData = [];
-  //   if (schools) {
-  //     $.each(schools, function (id, school) {
-  //       console.log(school);
-  //       $("#schoolSelect").append(`
-  //                           <option value="${id}">
-  //                             ${school.school_name}
-  //                           </option>
-  //       `);
-  //     });
-  //   }
-  // });
-
-  database.ref("users").on("value", function (snapshot) {
-    const users = snapshot.val();
-    teachersData = [];
-
-    if (users) {
-      $.each(users, function (id, user) {
-        if (user.role === "teacher") {
-          $('#teachers').append(`
-            <option value="${id}">
-              ${user.first_name} ${user.last_name}
-            </option>
-          `);
-        }
-      });
-    }
-    new TomSelect("#teachers", {
-      plugins: ["remove_button"],
-      maxItems: null, // unlimited selections
-      create: false,
-      persist: false,
-      placeholder: "Select teachers...",
-    });
-  });
 });

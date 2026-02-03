@@ -239,4 +239,19 @@ $(document).ready(function () {
         console.error("Data could not be saved.", error);
       });
   });
+
+  database.ref("schools").on("value", function (snapshot) {
+    const schools = snapshot.val();
+    console.log(schools);
+    if (schools) {
+      $.each(schools, function (id, school) {
+        $("#school").append(` <option
+                              value="${school.school_name}"
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              ${school.school_name}
+                            </option>`);
+      });
+    }
+  });
 });
