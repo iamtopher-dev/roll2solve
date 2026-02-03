@@ -2,7 +2,7 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
-console.log(userLogged)
+  console.log(userLogged);
   // ===============================
   // ADD QUIZ
   // ===============================
@@ -14,19 +14,20 @@ console.log(userLogged)
       return;
     }
 
+    console.log(params_id);
     firebase
       .database()
-      .ref(`manage_classroom/${params_id}`)
+      .ref(`classrooms/${params_id}`)
       .once("value")
       .then(function (snapshot) {
-        const manageClassroom = snapshot.val();
-        if (!manageClassroom) return;
-
+        const classrooms = snapshot.val();
+        if (!classrooms) return;
+        console.log(classrooms);
         const data = {
           quiz_name: quizName,
           manage_classroom_id: params_id,
-          classroom_name: manageClassroom.classroom_name,
-          teacher_id: manageClassroom.teacher_id,
+          classroom_name: classrooms.classroom_name,
+          teacher_id: userLogged.id,
           created_at: firebase.database.ServerValue.TIMESTAMP,
         };
 

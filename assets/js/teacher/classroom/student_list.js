@@ -2,8 +2,11 @@ $(document).ready(function () {
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-  database.ref(`manage_classroom/${id}`).on("value", function (snapshot) {
-    const manage_classroom = snapshot.val();
+
+  database.ref(`classrooms/${id}`).on("value", function (snapshot) {
+    const classroom = snapshot.val();
+    console.log(classroom);
+
     database.ref(`users`).on("value", function (snapshot) {
       const students = snapshot.val();
 
@@ -11,7 +14,7 @@ $(document).ready(function () {
         $.each(students, function (id, student) {
           if (
             student.role === "student" &&
-            student.classroom === manage_classroom.classroom_name
+            student.classroom === classroom.classroom_name
           ) {
             $("#studentsListTable").append(`<tr>
                               <td class="py-3 pr-5 whitespace-nowrap sm:pr-5">
@@ -61,21 +64,26 @@ $(document).ready(function () {
         });
       }
     });
-
-    // studentsData = [];
-
-    // if (users) {
-    //   $.each(users, function (id, user) {
-    //     if (user.role === "student") {
-    //       studentsData.push({
-    //         id,
-    //         ...user,
-    //       });
-    //     }
-    //   });
-    // }
-
-    // currentPage = 1;
-    // renderStudentTable(filteredStudents());
   });
+
+  // database.ref(`manage_classroom/${id}`).on("value", function (snapshot) {
+  //   const manage_classroom = snapshot.val();
+    
+
+  //   // studentsData = [];
+
+  //   // if (users) {
+  //   //   $.each(users, function (id, user) {
+  //   //     if (user.role === "student") {
+  //   //       studentsData.push({
+  //   //         id,
+  //   //         ...user,
+  //   //       });
+  //   //     }
+  //   //   });
+  //   // }
+
+  //   // currentPage = 1;
+  //   // renderStudentTable(filteredStudents());
+  // });
 });
