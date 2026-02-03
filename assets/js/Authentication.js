@@ -52,7 +52,7 @@ $(document).ready(function () {
         if (foundUser.role === "admin") {
           window.location.href = "/admin/teachers.html";
         } else if (foundUser.role === "teacher") {
-          window.location.href = "/teacher/classrooms.html";
+          window.location.href = "/teacher/section.html";
         }
       })
       .catch((error) => {

@@ -26,8 +26,27 @@ $(document).ready(function () {
       const date = classroom.created_at
         ? new Date(classroom.created_at).toLocaleString()
         : "";
-      console.log(classroom.id);
-      $classroomsTable.append(`
+      // console.log(classroom.id);
+      var teachersName = "";
+
+      database
+        .ref("users")
+        .once("value")
+        .then(function (snapshot) {
+          const users = snapshot.val();
+
+          if (!users || !classroom.teachers) return;
+
+          classroom.teachers.forEach(function (teacherId) {
+            const user = users[teacherId];
+
+            if (user && user.role === "teacher") {
+              teachersName += user.first_name + " " + user.last_name + ", ";
+            }
+          });
+
+          teachersName = teachersName.replace(/, $/, "");
+          $classroomsTable.append(`
       <tr>
         <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
           <div>
@@ -39,10 +58,18 @@ $(document).ready(function () {
         <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
           <div>
             <span class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
-              ${date}
+              ${teachersName}
             </span>
           </div>
         </td>
+        <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
+          <div>
+            <span class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
+              ${date} 
+            </span>
+          </div>
+        </td>
+        
         <td class="px-5 py-3 whitespace-nowrap sm:px-6">
                           <div class="flex items-center justify-center">
                             <div x-data="dropdown()" class="relative">
@@ -85,6 +112,7 @@ $(document).ready(function () {
                         </td>
       </tr>
     `);
+        });
     });
 
     renderPagination(data);
@@ -163,6 +191,7 @@ $(document).ready(function () {
   $("#addClassroomBtn").on("click", function () {
     const data = {
       classroom_name: $("#classroomName").val(),
+      teachers: $("#teachers").val(),
       created_at: firebase.database.ServerValue.TIMESTAMP,
     };
     firebase
@@ -205,22 +234,6 @@ $(document).ready(function () {
     });
   }
 
-  // database.ref("schools").on("value", function (snapshot) {
-  //   const schools = snapshot.val();
-  //   console.log(schools);
-  //   SchoolsData = [];
-  //   if (schools) {
-  //     $.each(schools, function (id, school) {
-  //       console.log(school);
-  //       $("#schoolSelect").append(`
-  //                           <option value="${id}">
-  //                             ${school.school_name}
-  //                           </option>
-  //       `);
-  //     });
-  //   }
-  // });
-
   database.ref("users").on("value", function (snapshot) {
     const users = snapshot.val();
     teachersData = [];
@@ -228,7 +241,7 @@ $(document).ready(function () {
     if (users) {
       $.each(users, function (id, user) {
         if (user.role === "teacher") {
-          $('#teachers').append(`
+          $("#teachers").append(`
             <option value="${id}">
               ${user.first_name} ${user.last_name}
             </option>
