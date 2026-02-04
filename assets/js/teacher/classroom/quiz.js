@@ -3,9 +3,8 @@ $(document).ready(function () {
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
   console.log(userLogged);
-  // ===============================
-  // ADD QUIZ
-  // ===============================
+
+
   $("#addQuizNameBtn").on("click", function () {
     const quizName = $("#quizName").val().trim();
 
@@ -31,6 +30,7 @@ $(document).ready(function () {
           created_at: firebase.database.ServerValue.TIMESTAMP,
         };
 
+
         firebase
           .database()
           .ref("quiz")
@@ -46,9 +46,6 @@ $(document).ready(function () {
       });
   });
 
-  // ===============================
-  // LOAD QUIZZES (FIXED DUPLICATION)
-  // ===============================
   firebase
     .database()
     .ref("quiz")
