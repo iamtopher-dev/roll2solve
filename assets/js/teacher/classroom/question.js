@@ -5,15 +5,15 @@ $(document).ready(function () {
 
 // generate();
   function generate(){
-    for (let i = 1; i < 3; i++) {
-      let answer = 20/i ;
+    for (let i = 1; i < 6; i++) {
+      let answer = 20*i ;
     const data = {
-          question: `20 / ${i}`,
+          question: `20 * ${i}`,
           answer: answer,
-          quiz_id: "-OkWkldix2sYGn5Et6tp",
+          quiz_id: "-Okhx2O_hEzD6C4k7zat",
           hint:answer,
           teacher_id: "-Ok89XhQ7njkcYIKlHs5",
-          operator_type: "division",
+          operator_type: "multiplication",
           classroom_name: "Grade 7 - Maharlika",
           created_at: firebase.database.ServerValue.TIMESTAMP,
         };

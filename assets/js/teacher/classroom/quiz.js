@@ -7,9 +7,14 @@ $(document).ready(function () {
 
   $("#addQuizNameBtn").on("click", function () {
     const quizName = $("#quizName").val().trim();
+    const timeInMinutes = $("#timeInMinutes").val();
 
     if (!quizName) {
       alert("Quiz name is required");
+      return;
+    }
+    if (!timeInMinutes) {
+      alert("Time in minutes is required");
       return;
     }
 
@@ -27,6 +32,7 @@ $(document).ready(function () {
           manage_classroom_id: params_id,
           classroom_name: classrooms.classroom_name,
           teacher_id: userLogged.id,
+          time_in_minutes: timeInMinutes,
           created_at: firebase.database.ServerValue.TIMESTAMP,
         };
 

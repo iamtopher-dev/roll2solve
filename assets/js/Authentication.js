@@ -5,7 +5,6 @@ $(document).ready(function () {
 
     $("#loginError").addClass("hidden");
 
-    // console.log(username,password)
     if (!username || !password) {
       showError("Please enter username and password");
       return;
@@ -28,7 +27,7 @@ $(document).ready(function () {
             ) {
               foundUser = user;
               userId = id;
-              return false; // stop loop
+              return false; 
             }
           });
         }
@@ -38,7 +37,6 @@ $(document).ready(function () {
           return;
         }
 
-        // ✅ Save login session
         localStorage.setItem(
           "loggedInUser",
           JSON.stringify({
@@ -48,11 +46,10 @@ $(document).ready(function () {
           })
         );
 
-        // ✅ Redirect by role
         if (foundUser.role === "admin") {
-          window.location.href = "/admin/teachers.html";
+          window.location.href = "/admin/dashboard.html";
         } else if (foundUser.role === "teacher") {
-          window.location.href = "/teacher/section.html";
+          window.location.href = "/teacher/dashboard.html";
         }
       })
       .catch((error) => {

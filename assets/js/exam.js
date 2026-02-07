@@ -2,6 +2,33 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
+// generate();
+  function generate(){
+    for (let i = 1; i < 11; i++) {
+      const data = {
+      question: `${i} / 1`.trim(),
+      answer: (i/1).toString().trim(),
+      operator_type: "division".trim(),
+      created_at: firebase.database.ServerValue.TIMESTAMP,
+    };
+
+    firebase
+      .database()
+      .ref("exam")
+      .push(data)
+      .then(() => {
+        $("#question").val("");
+        $("#answer").val("");
+        $("#operator_type").val("");
+        $("#addQuestionModal").hide();
+        console.log("Quiz added successfully");
+      })
+      .catch((error) => {
+        console.error("Error saving quiz:", error);
+      });
+    }
+    
+  }
 
   $("#addQuestionBtn").on("click", function () {
     const question = $("#question").val().trim();

@@ -1,4 +1,3 @@
-// 🔹 GLOBAL CHART INSTANCE (IMPORTANT)
 let performanceChart = null;
 
 $(document).ready(function () {
@@ -6,9 +5,6 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  /* =======================
-     LOAD STUDENTS
-  ======================= */
   database.ref(`classrooms/${id}`).on("value", function (snapshot) {
     const classroom = snapshot.val();
 
@@ -19,10 +15,17 @@ $(document).ready(function () {
       if (!students) return;
 
       $.each(students, function (userId, student) {
+        console.log(student);
         if (
           student.role === "student" &&
           student.classroom === classroom.classroom_name
         ) {
+          const actionColor =
+            {
+              Enhancement: "bg-success-500",
+              Consolidation: "bg-warning-500",
+              Intervention: "bg-error-500",
+            }[student.current_action] || "bg-gray-500";
           $("#studentsListTable").append(`
             <tr>
               <td class="py-3 pr-5 whitespace-nowrap">
@@ -32,9 +35,9 @@ $(document).ready(function () {
               </td>
 
               <td class="px-5 py-3 whitespace-nowrap">
-                <span class="rounded-full bg-success-500 px-3 py-1 text-white text-sm">
-                  Success
-                </span>
+                <span class="rounded-full ${actionColor} px-3 py-1 text-white text-sm">
+  ${student.current_action}
+</span>
               </td>
 
               <td class="px-5 py-3 whitespace-nowrap">
@@ -52,15 +55,13 @@ $(document).ready(function () {
     });
   });
 
-  /* =======================
-     VIEW STATISTICS CLICK
-  ======================= */
   $("#studentsListTable").on("click", "#viewStatisticsBtn", function () {
     const userId = $(this).data("userid");
 
     $("#viewStatisticsModal").fadeIn(200, function () {
       renderAllQuizGraph(userId);
       loadStudentStats(userId);
+      show_dunt_by_user(userId);
     });
   });
 
@@ -68,9 +69,6 @@ $(document).ready(function () {
     $("#viewStatisticsModal").fadeOut(150);
   });
 
-  /* =======================
-     LOAD SUMMARY STATS
-  ======================= */
   function loadStudentStats(userId) {
     database.ref("player_data").once("value", function (snapshot) {
       const data = snapshot.val();
@@ -106,7 +104,6 @@ $(document).ready(function () {
         totals.points += r.points || 0;
       });
 
-      /* 🔹 CALCULATE TOTALS CORRECTLY */
       const totalQuestions =
         totals.totalA + totals.totalS + totals.totalM + totals.totalD;
 
@@ -129,7 +126,6 @@ $(document).ready(function () {
 
       const mastery = Object.entries(accuracy).sort((a, b) => b[1] - a[1]);
 
-      /* 🔹 UPDATE UI */
       $("#totalMatches").text(records.length);
       $("#totalPoints").text(totals.points);
       $("#avgAccuracy").text(overallAccuracy.toFixed(1) + "%");
@@ -143,9 +139,6 @@ $(document).ready(function () {
     });
   }
 
-  /* =======================
-     CHART: ALL QUIZZES
-  ======================= */
   function renderAllQuizGraph(userId) {
     const ctx = document.getElementById("myChart").getContext("2d");
 
@@ -183,7 +176,7 @@ $(document).ready(function () {
       Object.keys(quizMap).forEach((quizId, index) => {
         const q = quizMap[quizId];
         labels.push(`Quiz ${index + 1}`);
-        values.push(q.correct); // <-- total correct answers (not percentage)
+        values.push(q.correct);
       });
 
       if (performanceChart) performanceChart.destroy();
@@ -208,12 +201,103 @@ $(document).ready(function () {
           scales: {
             y: {
               beginAtZero: true,
-              // You can set max dynamically if you want, or leave it auto
-              // max: Math.max(...values) + 5,
             },
           },
         },
       });
     });
+  }
+
+  function show_dunt_by_user(user_id) {
+    $("#list_take_student_exam").empty();
+    firebase
+      .database()
+      .ref("player_data_exam")
+      .on("value", function (snapshot) {
+        const player_data_exam = snapshot.val();
+        let takeCount = {};
+
+        $.each(player_data_exam, function (id, exam) {
+          if (exam.user_id === user_id) {
+            if (!takeCount[user_id]) takeCount[user_id] = 1;
+            else takeCount[user_id] += 1;
+
+            let takeText =
+              takeCount[user_id] +
+              (takeCount[user_id] === 1
+                ? "st"
+                : takeCount[user_id] === 2
+                  ? "nd"
+                  : takeCount[user_id] === 3
+                    ? "rd"
+                    : "th") +
+              " Take";
+            $("#list_take_student_exam").append(`<tr>
+  <td class="border border-gray-300 py-2 px-3 text-center text-sm">
+    ${takeText}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${exam.correctQAddition || 0}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${getPL(exam.correctQAddition)}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${exam.correctQSubtraction || 0}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${getPL(exam.correctQSubtraction)}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${exam.correctQMultiplication || 0}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${getPL(exam.correctQMultiplication)}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${exam.correctQDivision || 0}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+    ${exam.correctQDivision >= 9 ? "H" : exam.correctQDivision >= 5 ? "M" : "L"}
+  </td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+  ${
+    exam.correctQAddition < 5 ||
+    exam.correctQSubtraction < 5 ||
+    exam.correctQMultiplication < 5
+      ? "NN"
+      : "N"
+  }
+</td>
+  <td class="border border-gray-300 py-2 px-3 text-center">
+  ${evaluateTake(exam).action}
+  </td>
+</tr>`);
+          }
+        });
+      });
+  }
+  function getAction(pls) {
+    if (pls.includes("L")) return "I";
+    if (pls.includes("M")) return "C";
+    return "E";
+  }
+  function evaluateTake(scores) {
+    const pls = [
+      getPL(scores.correctQAddition),
+      getPL(scores.correctQSubtraction),
+      getPL(scores.correctQMultiplication),
+      getPL(scores.correctQDivision),
+    ];
+
+    return {
+      PLs: pls,
+      action: getAction(pls),
+    };
+  }
+  function getPL(score) {
+    if (score >= 9) return "H";
+    if (score >= 5) return "M";
+    return "L";
   }
 });
