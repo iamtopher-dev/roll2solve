@@ -222,16 +222,8 @@ $(document).ready(function () {
             if (!takeCount[user_id]) takeCount[user_id] = 1;
             else takeCount[user_id] += 1;
 
-            let takeText =
-              takeCount[user_id] +
-              (takeCount[user_id] === 1
-                ? "st"
-                : takeCount[user_id] === 2
-                  ? "nd"
-                  : takeCount[user_id] === 3
-                    ? "rd"
-                    : "th") +
-              " Take";
+            let takeText = exam.typeExam
+              
             $("#list_take_student_exam").append(`<tr>
   <td class="border border-gray-300 py-2 px-3 text-center text-sm">
     ${takeText}

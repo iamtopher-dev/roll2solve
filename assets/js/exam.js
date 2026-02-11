@@ -2,32 +2,31 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
-// generate();
-  function generate(){
+  generate();
+  function generate() {
     for (let i = 1; i < 11; i++) {
       const data = {
-      question: `${i} / 1`.trim(),
-      answer: (i/1).toString().trim(),
-      operator_type: "division".trim(),
-      created_at: firebase.database.ServerValue.TIMESTAMP,
-    };
+        question: `${i} * 1`.trim(),
+        answer: (i * 1).toString().trim(),
+        operator_type: "multiplication".trim(),
+        created_at: firebase.database.ServerValue.TIMESTAMP,
+      };
 
-    firebase
-      .database()
-      .ref("exam")
-      .push(data)
-      .then(() => {
-        $("#question").val("");
-        $("#answer").val("");
-        $("#operator_type").val("");
-        $("#addQuestionModal").hide();
-        console.log("Quiz added successfully");
-      })
-      .catch((error) => {
-        console.error("Error saving quiz:", error);
-      });
+      firebase
+        .database()
+        .ref("exam")
+        .push(data)
+        .then(() => {
+          $("#question").val("");
+          $("#answer").val("");
+          $("#operator_type").val("");
+          $("#addQuestionModal").hide();
+          console.log("Quiz added successfully");
+        })
+        .catch((error) => {
+          console.error("Error saving quiz:", error);
+        });
     }
-    
   }
 
   $("#addQuestionBtn").on("click", function () {
@@ -130,4 +129,49 @@ $(document).ready(function () {
                               </tr>`);
       });
     });
+  $("#testToggle").on("change", function () {
+    if ($(this).is(":checked")) {
+      update_exam_settings("Post-Test");
+    } else {
+      update_exam_settings("Pre-Test");
+    }
+  });
+
+  fetch_exam_settings();
+
+  function fetch_exam_settings() {
+  firebase
+    .database()
+    .ref("settings_exam/-OlBFIcptj7O4yeo3jK2")
+    .once("value")
+    .then((snapshot) => {
+      const settings = snapshot.val();
+
+      if (settings && settings.type === "Post-Test") {
+        document.getElementById("testToggle").checked = true;
+        
+      } else {
+        document.getElementById("testToggle").checked = false;
+      }
+
+      // trigger change so Alpine updates UI
+      document.getElementById("testToggle").dispatchEvent(new Event("change"));
+    });
+}
+
+  function update_exam_settings(type) {
+    const data = {
+      type: type,
+    };
+    firebase
+      .database()
+      .ref("settings_exam/-OlBFIcptj7O4yeo3jK2")
+      .update(data)
+      .then(() => {
+        console.log("Quiz added successfully");
+      })
+      .catch((error) => {
+        console.error("Error saving quiz:", error);
+      });
+  }
 });

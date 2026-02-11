@@ -93,7 +93,7 @@
               </h3>
 
               <ul class="mb-6 flex flex-col gap-1">
-               <li>
+                <li>
                   <a href="dashboard.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
@@ -229,10 +229,7 @@
 
               <ul class="mb-6 flex flex-col gap-1">
                 <li>
-                  <a
-                    href="school.html"
-                    class="menu-item group "
-                  >
+                  <a href="school.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -258,10 +255,7 @@
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="school.html"
-                    class="menu-item group "
-                  >
+                  <a href="school.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -428,6 +422,42 @@
                   </button>
                 </div>
 
+                <div class="flex gap-6">
+                  <div class="flex">
+                    <div x-data="{ switcherToggle: false }">
+                      <label
+                        class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400"
+                      >
+                        <div class="relative">
+                          <!-- Bind checkbox state to Alpine -->
+                          <input
+                            type="checkbox"
+                            id="testToggle"
+                            class="sr-only"
+                            x-model="switcherToggle"
+                          />
+
+                          <!-- Background -->
+                          <div
+                            class="block h-6 w-11 rounded-full"
+                            :class="switcherToggle ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"
+                          ></div>
+
+                          <!-- Circle -->
+                          <div
+                            class="shadow-theme-sm absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white duration-300 ease-linear"
+                            :class="switcherToggle ? 'translate-x-full' : 'translate-x-0'"
+                          ></div>
+                        </div>
+
+                        <!-- Dynamic label -->
+                        <span
+                          x-text="switcherToggle ? 'Post Test' : 'Pre Test'"
+                        ></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
                 <div
                   id="addQuestionModal"
                   x-show="isModalOpen"
