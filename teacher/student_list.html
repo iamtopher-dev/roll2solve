@@ -58,7 +58,6 @@
           </a>
         </div>
         <!-- SIDEBAR HEADER -->
-
         <div
           class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear"
         >
@@ -94,10 +93,7 @@
 
               <ul class="mb-6 flex flex-col gap-1">
                 <li>
-                  <a
-                    href="/teacher/dashboard.html"
-                    class="menu-item group "
-                  >
+                  <a href="/teacher/dashboard.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -124,7 +120,7 @@
                 </li>
                 <li>
                   <a
-                    href="/teacher/classrooms.html"
+                    href="/teacher/section.html"
                     class="menu-item group menu-item-active"
                   >
                     <svg
@@ -147,7 +143,7 @@
                       class="menu-item-text"
                       :class="sidebarToggle ? 'xl:hidden' : ''"
                     >
-                      Classrooms
+                      Section
                     </span>
                   </a>
                 </li>
@@ -264,7 +260,12 @@
           <div
             class="mx-auto max-w-(--breakpoint-2xl) p-4 pb-20 md:p-6 md:pb-6"
           >
-            <!-- Breadcrumb Start -->
+            <h1
+              class="text-2xl font-bold text-gray-800 dark:text-white"
+              id="sectionDisplay"
+            >
+              Loading...
+            </h1>
             <div>
               <div
                 class="flex flex-wrap items-center justify-between gap-3 pb-6"
@@ -324,7 +325,7 @@
                           fill=""
                         />
                       </svg>
-                      View Dunt
+                      Student Test Result
                     </button>
                     <button
                       id="manage_quiz_btn"
@@ -348,11 +349,91 @@
                       </svg>
                       Manage Quiz
                     </button>
+                    <button
+                      id="leaderboard_btn"
+                      type="button"
+                      class="-ml-px inline-flex items-center gap-2 bg-transparent px-4 py-3 text-sm font-medium text-brand-500 ring-1 ring-inset ring-brand-500 first:rounded-l-lg last:rounded-r-lg hover:bg-brand-500 hover:text-white"
+                    >
+                      <svg
+                        class="fill-current"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M9.77644 3.24175C9.9172 3.17137 10.0829 3.17137 10.2236 3.24175L15.3708 5.81524L10.3354 8.33283C10.1243 8.43839 9.87577 8.43839 9.66463 8.33283L4.62931 5.81524L9.77644 3.24175ZM3.70215 7.02871V13.412C3.70215 13.6013 3.80915 13.7745 3.97855 13.8592L9.24968 16.4947L9.24967 9.78321C9.16279 9.75247 9.07733 9.71623 8.99383 9.67447L3.70215 7.02871ZM10.7497 16.495V9.78347C10.8368 9.75267 10.9225 9.71634 11.0062 9.67447L16.2979 7.02871V13.412C16.2979 13.6013 16.1909 13.7745 16.0215 13.8592L10.7497 16.495ZM9.41414 17.4826L9.10563 18.0997C9.66867 18.3812 10.3314 18.3812 10.8944 18.0997L16.6923 15.2008C17.3699 14.862 17.7979 14.1695 17.7979 13.412V6.58782C17.7979 5.83027 17.3699 5.13774 16.6923 4.79896L10.8944 1.9001C10.3314 1.61859 9.66868 1.61859 9.10563 1.9001L9.44103 2.57092L9.10563 1.9001L3.30774 4.79896C2.63016 5.13774 2.20215 5.83027 2.20215 6.58782V13.412C2.20215 14.1695 2.63016 14.862 3.30774 15.2008L9.10563 18.0997L9.41414 17.4826Z"
+                          fill=""
+                        />
+                      </svg>
+                      Leaderboard
+                    </button>
                   </div>
                 </div>
               </div>
 
               <div class="pt-6">
+                <div class="flex gap-4 mb-4">
+                  <select
+                    id="filterAction"
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                    :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                    @change="isOptionSelected = true"
+                  >
+                    <option
+                      value=""
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      All Actions
+                    </option>
+                    <option
+                      value="Enhancement"
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      Enhancement
+                    </option>
+                    <option
+                      value="Consolidation"
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      Consolidation
+                    </option>
+                    <option
+                      value="Intervention"
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      Intervention
+                    </option>
+                  </select>
+                  <select
+                    id="filterGender"
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                    :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                    @change="isOptionSelected = true"
+                  >
+                    <option
+                      value=""
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      All Genders
+                    </option>
+                    <option
+                      value="Male"
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      Male
+                    </option>
+                    <option
+                      value="Female"
+                      class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                    >
+                      Female
+                    </option>
+                  </select>
+                </div>
                 <div
                   class="bg-white p-6 rounded-xl custom-scrollbar max-w-full overflow-x-auto overflow-y-visible px-5 sm:px-6"
                 >
@@ -379,7 +460,7 @@
                             <p
                               class="text-theme-sm text-gray-500 dark:text-gray-400"
                             >
-                              Action
+                              Recommended Action
                             </p>
                           </div>
                         </th>
@@ -429,11 +510,39 @@
                     </svg>
                   </button>
 
-                  <form class="">
+                  <form
+                    class="space-y-4"
+                    style="
+                      max-height: 80vh; /* limit modal height */
+                      overflow-y: auto; /* enable vertical scrolling */
+                      padding-right: 1rem; /* prevent scrollbar overlap */
+                    "
+                  >
+                    <div class="flex items-center space-x-4">
+                      <div>
+                        <h2 class="text-md text-gray-500">
+                          Name:
+                          <span class="font-medium text-gray-700"
+                            >Christopher Francisco</span
+                          >
+                        </h2>
+                        <p class="text-sm text-gray-500">
+                          Section:
+                          <span class="font-medium text-gray-700"
+                            >Maharlika</span
+                          >
+                        </p>
+                      </div>
+                    </div>
+
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">
+                      Game Statistics of Quiz Mode
+                    </h2>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <!-- LEFT -->
                       <div class="space-y-4">
-                        <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="bg-gray-50 rounded-xl p-6">
                           <h2 class="text-sm font-semibold text-gray-500 mb-3">
                             Overall Performance
                           </h2>
@@ -480,7 +589,7 @@
                           Top Mastery
                         </h2>
 
-                        <div class="bg-gray-50 rounded-xl p-4 space-y-4">
+                        <div class="bg-gray-50 rounded-xl p-6 space-y-4">
                           <div class="flex justify-between items-center">
                             <div>
                               <p id="firstOp" class="text-sm font-semibold"></p>
@@ -512,8 +621,117 @@
                         </div>
                       </div>
                     </div>
+
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">
+                      Quiz Mode
+                    </h2>
                     <div>
                       <canvas id="myChart"></canvas>
+                    </div>
+
+                    <div
+                      class="max-w-3xl flex items-start gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+                    >
+                      <!-- Proficiency Level (LEFT) -->
+                      <div class="flex-1">
+                        <h3
+                          class="mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                        >
+                          Proficiency Level
+                        </h3>
+
+                        <div class="space-y-2">
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center font-bold"
+                              >H</span
+                            >
+                            <span class="text-gray-700">Highly Numerate</span>
+                          </div>
+
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100 text-yellow-700 font-bold"
+                              >M</span
+                            >
+                            <span class="text-gray-700"
+                              >Moderately Numerate</span
+                            >
+                          </div>
+
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-700 font-bold"
+                              >L</span
+                            >
+                            <span class="text-gray-700">Low Numerate</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Vertical Divider -->
+                      <div class="w-px self-stretch bg-gray-200"></div>
+
+                      <!-- Recommended Action (RIGHT) -->
+                      <div class="flex-1">
+                        <h3
+                          class="mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                        >
+                          Recommended Action
+                        </h3>
+
+                        <div class="space-y-2">
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold"
+                              >E</span
+                            >
+                            <span class="text-gray-700">Enhancement</span>
+                          </div>
+
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-700 font-bold"
+                              >C</span
+                            >
+                            <span class="text-gray-700">Consolidation</span>
+                          </div>
+
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 font-bold"
+                              >I</span
+                            >
+                            <span class="text-gray-700">Intervention</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex-1">
+                        <h3
+                          class="mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide"
+                        >
+                          Numeracy Level
+                        </h3>
+
+                        <div class="space-y-2">
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold"
+                              >N</span
+                            >
+                            <span class="text-gray-700">Numerate</span>
+                          </div>
+
+                          <div class="flex items-center gap-3">
+                            <span
+                              class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-700 font-bold"
+                              >NN</span
+                            >
+                            <span class="text-gray-700">Non-Numerate</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <div>
@@ -569,7 +787,7 @@
                                   rowspan="2"
                                   class="border border-gray-300 py-3 px-5 text-center text-gray-500 text-sm"
                                 >
-                                  Action
+                                  Recommended Action
                                 </th>
                               </tr>
 
@@ -621,9 +839,7 @@
                               </tr>
                             </thead>
 
-                            <tbody id="list_take_student_exam">
-                              
-                            </tbody>
+                            <tbody id="list_take_student_exam"></tbody>
                           </table>
                         </div>
                       </div>

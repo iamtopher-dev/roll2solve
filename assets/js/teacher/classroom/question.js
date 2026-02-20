@@ -3,35 +3,35 @@ $(document).ready(function () {
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
 
-// generate();
-  function generate(){
+  // generate();
+  function generate() {
     for (let i = 1; i < 6; i++) {
-      let answer = 20*i ;
-    const data = {
-          question: `20 * ${i}`,
-          answer: answer,
-          quiz_id: "-Okhx2O_hEzD6C4k7zat",
-          hint:answer,
-          teacher_id: "-Ok89XhQ7njkcYIKlHs5",
-          operator_type: "multiplication",
-          classroom_name: "Grade 7 - Maharlika",
-          created_at: firebase.database.ServerValue.TIMESTAMP,
-        };
+      let answer = 20 * i;
+      const data = {
+        question: `20 * ${i}`,
+        answer: answer,
+        quiz_id: "-Okhx2O_hEzD6C4k7zat",
+        hint: answer,
+        teacher_id: "-Ok89XhQ7njkcYIKlHs5",
+        operator_type: "multiplication",
+        classroom_name: "Grade 7 - Maharlika",
+        created_at: firebase.database.ServerValue.TIMESTAMP,
+      };
 
-        firebase
-          .database()
-          .ref("question")
-          .push(data)
-          .then(() => {
-            $("#question").val("");
-            $("#answer").val("");
-            $("#addQuestionModal").hide();
-            console.log("Quiz added successfully");
-          })
-          .catch((error) => {
-            console.error("Error saving quiz:", error);
-          });
-        }
+      firebase
+        .database()
+        .ref("question")
+        .push(data)
+        .then(() => {
+          $("#question").val("");
+          $("#answer").val("");
+          $("#addQuestionModal").hide();
+          console.log("Quiz added successfully");
+        })
+        .catch((error) => {
+          console.error("Error saving quiz:", error);
+        });
+    }
   }
 
   $("#addQuestionBtn").on("click", function () {
@@ -49,7 +49,7 @@ $(document).ready(function () {
       alert("Answer name is required");
       return;
     }
-    if(!operator_type){
+    if (!operator_type) {
       alert("Operator type is required");
       return;
     }
@@ -67,8 +67,8 @@ $(document).ready(function () {
           question: question,
           answer: answer,
           quiz_id: params_id,
-          hint:hint,
-          operator_type:operator_type,
+          hint: hint,
+          operator_type: operator_type,
           teacher_id: quiz.teacher_id,
           classroom_name: quiz.classroom_name,
           created_at: firebase.database.ServerValue.TIMESTAMP,
@@ -145,7 +145,7 @@ $(document).ready(function () {
                                     <p
                                       class="text-theme-sm text-gray-700 dark:text-gray-400"
                                     >
-                                      ${(question.hint == "") ? "-" : question.hint}
+                                      ${question.hint == "" ? "-" : question.hint}
                                     </p>
                                   </div>
                                 </td>
@@ -161,5 +161,66 @@ $(document).ready(function () {
                               </tr>`);
         }
       });
+    });
+
+  firebase
+    .database()
+    .ref("player_data")
+    .on("value", async function (snapshot) {
+      const player_data = snapshot.val();
+
+      $("#listOfStudentsScoreTable").empty();
+
+      if (!player_data) {
+        $("#listOfStudentsScoreTable").html(`
+        <tr>
+          <td colspan="2" class="text-gray-500 text-center py-4">
+            No one has taken the quiz.
+          </td>
+        </tr>
+      `);
+        return;
+      }
+
+      for (const id in player_data) {
+        const player = player_data[id];
+
+        try {
+          const userSnap = await firebase
+            .database()
+            .ref("users/" + player.user_id)
+            .once("value");
+
+          const user = userSnap.val();
+          if (!user) continue;
+
+          if(user.role !== "student") continue;
+          if(player.quiz_id !== params_id) continue;
+          
+
+          const totalScore =
+            (player.correctQAddition || 0) +
+            (player.correctQSubtraction || 0) +
+            (player.correctQMultiplication || 0) +
+            (player.correctQDivision || 0);
+
+          $("#listOfStudentsScoreTable").append(`
+          <tr>
+            <td class="px-5 py-3 whitespace-nowrap sm:px-6">
+              <p class="text-theme-sm text-gray-700 dark:text-gray-400">
+                ${user.first_name ? user.first_name : "-"}  ${user.last_name ? user.last_name : "-"}
+              </p>
+            </td>
+            <td class="px-5 py-3 whitespace-nowrap sm:px-6">
+              <p class="text-theme-sm text-gray-700 dark:text-gray-400">
+                ${totalScore}
+              </p>
+            </td>
+          </tr>
+        `);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      }
     });
 });

@@ -10,6 +10,13 @@
     <title>Student Management</title>
     <link rel="icon" href="favicon.ico" />
     <link href="/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+      integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body
     x-data="{ page: 'ecommerce', 'loaded': true, 'darkMode': false, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false }"
@@ -18,7 +25,6 @@
          $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
     :class="{'dark bg-gray-900': darkMode === true}"
   >
-    <!-- ===== Preloader Start ===== -->
     <div
       x-show="loaded"
       x-init="window.addEventListener('DOMContentLoaded', () => {setTimeout(() => loaded = false, 500)})"
@@ -28,29 +34,19 @@
         class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-brand-500 border-t-transparent"
       ></div>
     </div>
-
-    <!-- ===== Preloader End ===== -->
-
-    <!-- ===== Page Wrapper Start ===== -->
     <div class="flex h-screen overflow-hidden">
-      <!-- ===== Sidebar Start ===== -->
       <aside
         :class="sidebarToggle ? 'translate-x-0 xl:w-[90px]' : '-translate-x-full'"
         class="sidebar fixed top-0 left-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-auto border-r border-gray-200 bg-white px-5 transition-all duration-300 xl:static xl:translate-x-0 dark:border-gray-800 dark:bg-black"
         @click.outside="sidebarToggle = false"
       >
-        <!-- SIDEBAR HEADER -->
         <div
           :class="sidebarToggle ? 'justify-center' : 'justify-between'"
           class="sidebar-header flex items-center gap-2 pt-8 pb-7"
         >
           <a href="index.html">
             <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
-              <img
-                class=""
-                src="/assets/img/roll2solve.png"
-                alt="Logo"
-              />
+              <img class="" src="/assets/img/roll2solve.png" alt="Logo" />
             </span>
 
             <img
@@ -97,7 +93,7 @@
               </h3>
 
               <ul class="mb-6 flex flex-col gap-1">
-              <li>
+                <li>
                   <a href="dashboard.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
@@ -182,10 +178,7 @@
                 </li>
 
                 <li>
-                  <a
-                    href="exam.html"
-                    class="menu-item group"
-                  >
+                  <a href="exam.html" class="menu-item group">
                     <svg
                       :class="(selected === 'exam') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -207,6 +200,32 @@
                       :class="sidebarToggle ? 'xl:hidden' : ''"
                     >
                       Exam
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="student_test_result.html" class="menu-item group">
+                    <svg
+                      :class="(selected === 'student_test_results') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V8.99998C3.25 10.2426 4.25736 11.25 5.5 11.25H9C10.2426 11.25 11.25 10.2426 11.25 8.99998V5.5C11.25 4.25736 10.2426 3.25 9 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H9C9.41421 4.75 9.75 5.08579 9.75 5.5V8.99998C9.75 9.41419 9.41421 9.74998 9 9.74998H5.5C5.08579 9.74998 4.75 9.41419 4.75 8.99998V5.5ZM5.5 12.75C4.25736 12.75 3.25 13.7574 3.25 15V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H9C10.2426 20.75 11.25 19.7427 11.25 18.5V15C11.25 13.7574 10.2426 12.75 9 12.75H5.5ZM4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H9C9.41421 14.25 9.75 14.5858 9.75 15V18.5C9.75 18.9142 9.41421 19.25 9 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15ZM12.75 5.5C12.75 4.25736 13.7574 3.25 15 3.25H18.5C19.7426 3.25 20.75 4.25736 20.75 5.5V8.99998C20.75 10.2426 19.7426 11.25 18.5 11.25H15C13.7574 11.25 12.75 10.2426 12.75 8.99998V5.5ZM15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V8.99998C14.25 9.41419 14.5858 9.74998 15 9.74998H18.5C18.9142 9.74998 19.25 9.41419 19.25 8.99998V5.5C19.25 5.08579 18.9142 4.75 18.5 4.75H15ZM15 12.75C13.7574 12.75 12.75 13.7574 12.75 15V18.5C12.75 19.7426 13.7574 20.75 15 20.75H18.5C19.7426 20.75 20.75 19.7427 20.75 18.5V15C20.75 13.7574 19.7426 12.75 18.5 12.75H15ZM14.25 15C14.25 14.5858 14.5858 14.25 15 14.25H18.5C18.9142 14.25 19.25 14.5858 19.25 15V18.5C19.25 18.9142 18.9142 19.25 18.5 19.25H15C14.5858 19.25 14.25 18.9142 14.25 18.5V15Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+
+                    <span
+                      class="menu-item-text"
+                      :class="sidebarToggle ? 'xl:hidden' : ''"
+                    >
+                      Student Test Results
                     </span>
                   </a>
                 </li>
@@ -239,11 +258,8 @@
               </h3>
 
               <ul class="mb-6 flex flex-col gap-1">
-               <li>
-                  <a
-                    href="school.html"
-                    class="menu-item group "
-                  >
+                <li>
+                  <a href="school.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -269,10 +285,7 @@
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="classrooms.html"
-                    class="menu-item group "
-                  >
+                  <a href="classrooms.html" class="menu-item group">
                     <svg
                       :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' || page === 'marketing' || page === 'crm' || page === 'stocks') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                       width="24"
@@ -331,7 +344,6 @@
           <!-- Sidebar Menu -->
 
           <!-- Promo Box -->
-          
         </div>
       </aside>
 
@@ -416,6 +428,311 @@
           <div
             class="mx-auto max-w-(--breakpoint-2xl) p-4 pb-20 md:p-6 md:pb-6"
           >
+            <div x-data="{ isEditModalOpen: false, editStudentId: null }">
+              <div
+                id="editStudentModal"
+                x-show="isEditModalOpen"
+                class="fixed inset-0 flex items-center justify-center p-5 overflow-y-auto modal z-99999"
+                style="display: none"
+              >
+                <div
+                  class="modal-close-btn fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
+                ></div>
+                <div
+                  @click.outside="isEditModalOpen = false"
+                  class="relative w-full max-w-[584px] rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10"
+                >
+                  <!-- close btn -->
+                  <button
+                    @click="isEditModalOpen = false"
+                    id="closeModalEditStudent"
+                    class="group absolute right-3 top-3 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-300 hover:text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 sm:right-6 sm:top-6 sm:h-11 sm:w-11"
+                  >
+                    <svg
+                      class="transition-colors fill-current group-hover:text-gray-600 dark:group-hover:text-gray-200"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M6.04289 16.5413C5.65237 16.9318 5.65237 17.565 6.04289 17.9555C6.43342 18.346 7.06658 18.346 7.45711 17.9555L11.9987 13.4139L16.5408 17.956C16.9313 18.3466 17.5645 18.3466 17.955 17.956C18.3455 17.5655 18.3455 16.9323 17.955 16.5418L13.4129 11.9997L17.955 7.4576C18.3455 7.06707 18.3455 6.43391 17.955 6.04338C17.5645 5.65286 16.9313 5.65286 16.5408 6.04338L11.9987 10.5855L7.45711 6.0439C7.06658 5.65338 6.43342 5.65338 6.04289 6.0439C5.65237 6.43442 5.65237 7.06759 6.04289 7.45811L10.5845 11.9997L6.04289 16.5413Z"
+                        fill=""
+                      />
+                    </svg>
+                  </button>
+
+                  <form class="">
+                    <h4
+                      class="mb-6 text-lg font-medium text-gray-800 dark:text-white/90"
+                    >
+                      Personal Information
+                    </h4>
+
+                    <div
+                      class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2"
+                    >
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          First Name
+                        </label>
+                        <input
+                          id="editFirstName"
+                          type="text"
+                          placeholder="John"
+                          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        />
+                      </div>
+
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Last Name
+                        </label>
+                        <input
+                          id="editLastName"
+                          type="text"
+                          placeholder="Doe"
+                          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Student ID
+                        </label>
+                        <input
+                          id="editStudentId"
+                          type="text"
+                          placeholder="Student ID"
+                          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          School
+                        </label>
+                        <div
+                          x-data="{ isOptionSelected: false }"
+                          class="relative z-20 bg-transparent"
+                        >
+                          <select
+                            id="editSchool"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                            @change="isOptionSelected = true"
+                          >
+                            <option
+                              value=""
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Select Option
+                            </option>
+                          </select>
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
+                          >
+                            <svg
+                              class="stroke-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                                stroke=""
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Section
+                        </label>
+                        <div
+                          x-data="{ isOptionSelected: false }"
+                          class="relative z-20 bg-transparent"
+                        >
+                          <select
+                            id="editClassroom"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                            @change="isOptionSelected = true"
+                          >
+                            <option
+                              value=""
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Select Option
+                            </option>
+                          </select>
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
+                          >
+                            <svg
+                              class="stroke-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                                stroke=""
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Birthday
+                        </label>
+                        <div class="relative">
+                          <input
+                            id="editBirthday"
+                            type="date"
+                            placeholder="Select date"
+                            class="dark:bg-dark-900 datepickerTwo shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 pl-4 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                          />
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+                          >
+                            <svg
+                              class="fill-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M6.66659 1.5415C7.0808 1.5415 7.41658 1.87729 7.41658 2.2915V2.99984H12.5833V2.2915C12.5833 1.87729 12.919 1.5415 13.3333 1.5415C13.7475 1.5415 14.0833 1.87729 14.0833 2.2915V2.99984L15.4166 2.99984C16.5212 2.99984 17.4166 3.89527 17.4166 4.99984V7.49984V15.8332C17.4166 16.9377 16.5212 17.8332 15.4166 17.8332H4.58325C3.47868 17.8332 2.58325 16.9377 2.58325 15.8332V7.49984V4.99984C2.58325 3.89527 3.47868 2.99984 4.58325 2.99984L5.91659 2.99984V2.2915C5.91659 1.87729 6.25237 1.5415 6.66659 1.5415ZM6.66659 4.49984H4.58325C4.30711 4.49984 4.08325 4.7237 4.08325 4.99984V6.74984H15.9166V4.99984C15.9166 4.7237 15.6927 4.49984 15.4166 4.49984H13.3333H6.66659ZM15.9166 8.24984H4.08325V15.8332C4.08325 16.1093 4.30711 16.3332 4.58325 16.3332H15.4166C15.6927 16.3332 15.9166 16.1093 15.9166 15.8332V8.24984Z"
+                                fill=""
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Email
+                        </label>
+                        <input
+                          id="editEmail"
+                          type="email"
+                          placeholder="Email"
+                          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Gender
+                        </label>
+                        <div
+                          x-data="{ isOptionSelected: false }"
+                          class="relative z-20 bg-transparent"
+                        >
+                          <select
+                            id="editGender"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                            @change="isOptionSelected = true"
+                          >
+                            <option
+                              value=""
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Select Option
+                            </option>
+                            <option
+                              value="Male"
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Male
+                            </option>
+                            <option
+                              value="Female"
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Female
+                            </option>
+                          </select>
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
+                          >
+                            <svg
+                              class="stroke-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                                stroke=""
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-center justify-end w-full gap-3 mt-6"
+                    >
+                      <button
+                        @click="isModalOpen = false"
+                        type="button"
+                        class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto"
+                      >
+                        Close
+                      </button>
+                      <button
+                        id="saveEditStudentBtn"
+                        type="button"
+                        class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
             <div x-data="{isModalOpen: false}">
               <button
                 class="px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
@@ -423,7 +740,180 @@
               >
                 Add Students
               </button>
+              <button
+                id="uploadStudentsBtn"
+                class="px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+              >
+                <i class="ri-import-line mr-2"></i>Upload Students
+              </button>
 
+              <!-- Upload Students Modal -->
+
+              <div
+                id="uploadStudentsModal"
+                class="fixed inset-0 flex hidden items-center justify-center p-5 overflow-y-auto modal z-99999"
+              >
+                <div
+                  class="modal-close-btn fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
+                ></div>
+                <div
+                  class="relative w-full max-w-[584px] rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10"
+                >
+                  <!-- close btn -->
+                  <button
+                    class="modal-close-btn group absolute right-3 top-3 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-300 hover:text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 sm:right-6 sm:top-6 sm:h-11 sm:w-11"
+                  >
+                    <svg
+                      class="transition-colors fill-current group-hover:text-gray-600 dark:group-hover:text-gray-200"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M6.04289 16.5413C5.65237 16.9318 5.65237 17.565 6.04289 17.9555C6.43342 18.346 7.06658 18.346 7.45711 17.9555L11.9987 13.4139L16.5408 17.956C16.9313 18.3466 17.5645 18.3466 17.955 17.956C18.3455 17.5655 18.3455 16.9323 17.955 16.5418L13.4129 11.9997L17.955 7.4576C18.3455 7.06707 18.3455 6.43391 17.955 6.04338C17.5645 5.65286 16.9313 5.65286 16.5408 6.04338L11.9987 10.5855L7.45711 6.0439C7.06658 5.65338 6.43342 5.65338 6.04289 6.0439C5.65237 6.43442 5.65237 7.06759 6.04289 7.45811L10.5845 11.9997L6.04289 16.5413Z"
+                        fill=""
+                      />
+                    </svg>
+                  </button>
+
+                  <form class="">
+                    <div class="mt-2 space-y-6">
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          School
+                        </label>
+                        <div
+                          x-data="{ isOptionSelected: false }"
+                          class="relative z-20 bg-transparent"
+                        >
+                          <select
+                            id="uploadExcelSchool"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                            @change="isOptionSelected = true"
+                          >
+                            <option
+                              value=""
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Select Option
+                            </option>
+                          </select>
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
+                          >
+                            <svg
+                              class="stroke-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                                stroke=""
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
+                          Section
+                        </label>
+                        <div
+                          x-data="{ isOptionSelected: false }"
+                          class="relative z-20 bg-transparent"
+                        >
+                          <select
+                            id="uploadExcelClassroom"
+                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                            :class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                            @change="isOptionSelected = true"
+                          >
+                            <option
+                              value=""
+                              class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                            >
+                              Select Option
+                            </option>
+                          </select>
+                          <span
+                            class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
+                          >
+                            <svg
+                              class="stroke-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                                stroke=""
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="space-y-6 border-t border-gray-100">
+                          <!-- Elements -->
+                          <div>
+                            <label
+                              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                            >
+                              Upload file
+                            </label>
+                            <input
+                              type="file"
+                              id="excelFile"
+                              accept=".xlsx, .xls"
+                              class="focus:border-ring-brand-300 shadow-theme-xs focus:file:ring-brand-300 h-11 w-full overflow-hidden rounded-lg border border-gray-300 bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:border-collapse file:cursor-pointer file:rounded-l-lg file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:py-3 file:pr-3 file:pl-3.5 file:text-sm file:text-gray-700 placeholder:text-gray-400 hover:file:bg-gray-100 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:text-white/90 dark:file:border-gray-800 dark:file:bg-white/[0.03] dark:file:text-gray-400 dark:placeholder:text-gray-400"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-center justify-end w-full gap-3 mt-6"
+                    >
+                      <button
+                        type="button"
+                        class="flex modal-close-btn w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs transition-colors hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 sm:w-auto"
+                      >
+                        Close
+                      </button>
+                      <button
+                        id="insertStudentBtn"
+                        type="button"
+                        class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto"
+                      >
+                        Add Student
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- End Upload Students Modal -->
               <div
                 id="addStudentModal"
                 x-show="isModalOpen"
@@ -636,6 +1126,19 @@
                         <label
                           class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                         >
+                          Email
+                        </label>
+                        <input
+                          id="email"
+                          type="email"
+                          placeholder="Email"
+                          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        />
+                      </div>
+                      <div class="col-span-1">
+                        <label
+                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                        >
                           Gender
                         </label>
                         <div
@@ -702,7 +1205,7 @@
                         Close
                       </button>
                       <button
-                        id="addStudentBtn"
+                        id="insertStudentBtn"
                         type="button"
                         class="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 sm:w-auto"
                       >
@@ -839,513 +1342,7 @@
                     <tbody
                       class="divide-y divide-gray-100 dark:divide-gray-800"
                       id="studentsTable"
-                    >
-                      <tr>
-                        <td class="py-3 pr-5 whitespace-nowrap sm:pr-5">
-                          <div class="col-span-3 flex items-center">
-                            <div class="flex items-center gap-3">
-                              <div class="h-8 w-8">
-                                <img
-                                  src="src/images/brand/brand-08.svg"
-                                  alt="brand"
-                                />
-                              </div>
-
-                              <div>
-                                <span
-                                  class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                  Bought PYPL
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Nov 23, 01:00 PM
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              $2,567.88
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Finance
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="bg-success-50 text-theme-xs text-success-600 dark:bg-success-500/15 dark:text-success-500 rounded-full px-2 py-0.5 font-medium"
-                            >
-                              Success
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center justify-center">
-                            <div x-data="dropdown()" class="relative">
-                              <button
-                                @click="toggle"
-                                class="text-gray-500 dark:text-gray-400"
-                              >
-                                <svg
-                                  class="fill-current"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
-                                    d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <div
-                                x-show="open"
-                                @click.outside="open = false"
-                                class="shadow-theme-lg dark:bg-gray-dark fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800"
-                                x-ref="dropdown"
-                              >
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  View More
-                                </button>
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
-                          <div class="flex items-center">
-                            <div class="flex items-center gap-3">
-                              <div class="h-8 w-8">
-                                <img
-                                  src="src/images/brand/brand-07.svg"
-                                  alt="brand"
-                                />
-                              </div>
-
-                              <div>
-                                <span
-                                  class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                  Bought AAPL
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Nov 22, 09:00 PM
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              $2,567.88
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Technology
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="bg-warning-50 text-theme-xs text-warning-600 dark:bg-warning-500/15 dark:text-warning-400 rounded-full px-2 py-0.5 font-medium"
-                            >
-                              Pending
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center justify-center">
-                            <div x-data="dropdown()" class="relative">
-                              <button
-                                @click="toggle"
-                                class="text-gray-500 dark:text-gray-400"
-                              >
-                                <svg
-                                  class="fill-current"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
-                                    d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <div
-                                x-show="open"
-                                @click.outside="open = false"
-                                class="shadow-theme-lg dark:bg-gray-dark fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800"
-                                x-ref="dropdown"
-                              >
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  View More
-                                </button>
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
-                          <div class="flex items-center">
-                            <div class="flex items-center gap-3">
-                              <div class="h-8 w-8">
-                                <img
-                                  src="src/images/brand/brand-15.svg"
-                                  alt="brand"
-                                />
-                              </div>
-
-                              <div>
-                                <span
-                                  class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                  Sell KKST
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Oct 12, 03:54 PM
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              $6,754.99
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Finance
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="col-span-1 flex items-center">
-                            <p
-                              class="bg-success-50 text-theme-xs text-success-600 dark:bg-success-500/15 dark:text-success-500 rounded-full px-2 py-0.5 font-medium"
-                            >
-                              Success
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center justify-center">
-                            <div x-data="dropdown()" class="relative">
-                              <button
-                                @click="toggle"
-                                class="text-gray-500 dark:text-gray-400"
-                              >
-                                <svg
-                                  class="fill-current"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
-                                    d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <div
-                                x-show="open"
-                                @click.outside="open = false"
-                                class="shadow-theme-lg dark:bg-gray-dark fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800"
-                                x-ref="dropdown"
-                              >
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  View More
-                                </button>
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
-                          <div class="flex items-center">
-                            <div class="flex items-center gap-3">
-                              <div class="h-8 w-8">
-                                <img
-                                  src="src/images/brand/brand-02.svg"
-                                  alt="brand"
-                                />
-                              </div>
-
-                              <div>
-                                <span
-                                  class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                  Bought FB
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Sep 09, 02:00 AM
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              $1,445.41
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Social mendia
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="col-span-1 flex items-center">
-                            <p
-                              class="bg-success-50 text-theme-xs text-success-600 dark:bg-success-500/15 dark:text-success-500 rounded-full px-2 py-0.5 font-medium"
-                            >
-                              Success
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center justify-center">
-                            <div x-data="dropdown()" class="relative">
-                              <button
-                                @click="toggle"
-                                class="text-gray-500 dark:text-gray-400"
-                              >
-                                <svg
-                                  class="fill-current"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
-                                    d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <div
-                                x-show="open"
-                                @click.outside="open = false"
-                                class="shadow-theme-lg dark:bg-gray-dark fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800"
-                                x-ref="dropdown"
-                              >
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  View More
-                                </button>
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="py-3 pr-5 whitespace-nowrap sm:pr-6">
-                          <div class="flex items-center">
-                            <div class="flex items-center gap-3">
-                              <div class="h-8 w-8">
-                                <img
-                                  src="src/images/brand/brand-10.svg"
-                                  alt="brand"
-                                />
-                              </div>
-
-                              <div>
-                                <span
-                                  class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
-                                >
-                                  Sell AMZN
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              Feb 35, 08:00 PM
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              $5,698.55
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center">
-                            <p
-                              class="text-theme-sm text-gray-700 dark:text-gray-400"
-                            >
-                              E-commerce
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="col-span-1 flex items-center">
-                            <p
-                              class="bg-error-50 text-theme-xs text-error-600 dark:bg-error-500/15 dark:text-error-500 rounded-full px-2 py-0.5 font-medium"
-                            >
-                              Failed
-                            </p>
-                          </div>
-                        </td>
-                        <td class="px-5 py-3 whitespace-nowrap sm:px-6">
-                          <div class="flex items-center justify-center">
-                            <div x-data="dropdown()" class="relative">
-                              <button
-                                @click="toggle"
-                                class="text-gray-500 dark:text-gray-400"
-                              >
-                                <svg
-                                  class="fill-current"
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
-                                    d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
-                                    fill=""
-                                  />
-                                </svg>
-                              </button>
-                              <div
-                                x-show="open"
-                                @click.outside="open = false"
-                                class="shadow-theme-lg dark:bg-gray-dark fixed w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-800"
-                                x-ref="dropdown"
-                              >
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  View More
-                                </button>
-                                <button
-                                  class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
+                    ></tbody>
                   </table>
                 </div>
 
@@ -1414,12 +1411,10 @@
               </div>
             </div>
           </div>
+          <!-- Modal Backdrop -->
         </main>
-        <!-- ===== Main Content End ===== -->
       </div>
-      <!-- ===== Content Area End ===== -->
     </div>
-    <!-- ===== Page Wrapper End ===== -->
     <script
       data-cfasync="false"
       src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
@@ -1435,9 +1430,8 @@
       referrerpolicy="no-referrer"
     ></script>
     <script src="/assets/js/Global.js"></script>
-    
     <script src="/assets/js/firebase.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="/assets/js/students.js"></script>
   </body>
 </html>

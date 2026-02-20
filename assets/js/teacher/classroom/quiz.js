@@ -3,7 +3,10 @@ $(document).ready(function () {
   const params_id = params.get("id");
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
   console.log(userLogged);
-
+  database.ref(`classrooms/${params_id}`).once("value", function (snapshot) {
+      const classroom = snapshot.val();
+      $("#sectionDisplay").text(`Students in ${classroom.classroom_name}`);
+  });
 
   $("#addQuizNameBtn").on("click", function () {
     const quizName = $("#quizName").val().trim();
@@ -25,6 +28,7 @@ $(document).ready(function () {
       .once("value")
       .then(function (snapshot) {
         const classrooms = snapshot.val();
+        
         if (!classrooms) return;
         console.log(classrooms);
         const data = {
@@ -35,7 +39,6 @@ $(document).ready(function () {
           time_in_minutes: timeInMinutes,
           created_at: firebase.database.ServerValue.TIMESTAMP,
         };
-
 
         firebase
           .database()

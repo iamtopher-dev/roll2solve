@@ -1,14 +1,9 @@
 $(document).ready(function () {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-
   const latestPerUser = {};
 
   // ==============================
   // SUMMARY OBJECTS
   // ==============================
-
-  // 1️⃣ Proficiency Summary (Per Subject)
   var summary = {
     Addition: { H: 0, M: 0, L: 0 },
     Subtraction: { H: 0, M: 0, L: 0 },
@@ -16,13 +11,11 @@ $(document).ready(function () {
     Division: { H: 0, M: 0, L: 0 },
   };
 
-  // 2️⃣ Numeracy Summary (N / NN)
   var numeracySummary = {
     N: { Male: 0, Female: 0 },
     NN: { Male: 0, Female: 0 },
   };
 
-  // 3️⃣ Recommended Action Summary (E / C / I)
   var actionSummary = {
     E: { Male: 0, Female: 0 },
     C: { Male: 0, Female: 0 },
@@ -32,7 +25,6 @@ $(document).ready(function () {
   // ==============================
   // LOAD EXAMS
   // ==============================
-
   database.ref("player_data_exam").once("value", function (snapshot) {
     const records = snapshot.val();
     if (!records) return;
@@ -48,78 +40,53 @@ $(document).ready(function () {
       }
     });
 
-    database.ref(`classrooms/${id}`).once("value", function (snapshot) {
-      const classroom = snapshot.val();
-      $("#sectionDisplay").text(`Students in ${classroom.classroom_name}`);
+    database.ref("users").once("value", function (snapshot) {
+      const students = snapshot.val();
+      $("#latest_take_exam_student_list").empty();
+      if (!students) return;
 
-      database.ref("users").once("value", function (snapshot) {
-        const students = snapshot.val();
-        if (!students) return;
+      var count = 1;
 
-        $("#latest_take_exam_student_list").empty();
+      $.each(students, function (userId, student) {
+        if (student.role === "student") {
+          const exam = latestPerUser[userId];
+          if (exam) {
+            // Update summaries
+            updateProficiencySummary(exam);
+            updateNumeracyAndAction(student, exam);
 
-        var count = 1;
+            // Append table row (unchanged design)
+            $("#latest_take_exam_student_list").append(`<tr>
+              <td class="border border-gray-300 py-2 px-3 text-center text-sm">${count++}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center text-sm">${student.first_name} ${student.last_name}</td>
 
-        $.each(students, function (userId, student) {
-          if (
-            student.role === "student" &&
-            student.classroom === classroom.classroom_name
-          ) {
-            const exam = latestPerUser[userId];
+              <td class="border border-gray-300 py-2 px-3 text-center">${exam.correctQAddition || 0}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center">${getPL(exam.correctQAddition)}</td>
 
-            if (exam) {
-              // ==============================
-              // UPDATE SUMMARIES
-              // ==============================
+              <td class="border border-gray-300 py-2 px-3 text-center">${exam.correctQSubtraction || 0}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center">${getPL(exam.correctQSubtraction)}</td>
 
-              updateProficiencySummary(exam);
-              updateNumeracyAndAction(student, exam);
+              <td class="border border-gray-300 py-2 px-3 text-center">${exam.correctQMultiplication || 0}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center">${getPL(exam.correctQMultiplication)}</td>
 
-              // ==============================
-              // APPEND TABLE ROW
-              // ==============================
+              <td class="border border-gray-300 py-2 px-3 text-center">${exam.correctQDivision || 0}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center">${getPL(exam.correctQDivision)}</td>
 
-              $("#latest_take_exam_student_list").append(`
-                <tr>
-                  <td class="border px-3 py-2 text-center">${count++}</td>
-                  <td class="border px-3 py-2 text-center">
-                    ${student.first_name} ${student.last_name}
-                  </td>
-
-                  <td class="border px-3 py-2 text-center">${exam.correctQAddition || 0}</td>
-                  <td class="border px-3 py-2 text-center">${getPL(exam.correctQAddition)}</td>
-
-                  <td class="border px-3 py-2 text-center">${exam.correctQSubtraction || 0}</td>
-                  <td class="border px-3 py-2 text-center">${getPL(exam.correctQSubtraction)}</td>
-
-                  <td class="border px-3 py-2 text-center">${exam.correctQMultiplication || 0}</td>
-                  <td class="border px-3 py-2 text-center">${getPL(exam.correctQMultiplication)}</td>
-
-                  <td class="border px-3 py-2 text-center">${exam.correctQDivision || 0}</td>
-                  <td class="border px-3 py-2 text-center">${getPL(exam.correctQDivision)}</td>
-
-                  <td class="border px-3 py-2 text-center">
-                    ${evaluateTake(exam).action === "E" ? "N" : "NN"}
-                  </td>
-
-                  <td class="border px-3 py-2 text-center">
-                    ${evaluateTake(exam).action}
-                  </td>
-                </tr>
-              `);
-            }
+              <td class="border border-gray-300 py-2 px-3 text-center">${evaluateTake(exam).action === "E" ? "N" : "NN"}</td>
+              <td class="border border-gray-300 py-2 px-3 text-center">${evaluateTake(exam).action}</td>
+            </tr>`);
           }
-        });
-
-        renderAllSummaries();
+        }
       });
+
+      // Render summary in UI (if you have HTML summary elements)
+      renderAllSummaries();
     });
   });
 
-  // ======================================================
-  // FUNCTIONS
-  // ======================================================
-
+  // ==============================
+  // SUMMARY LOGIC
+  // ==============================
   function updateProficiencySummary(exam) {
     const operators = [
       { key: "correctQAddition", name: "Addition" },
@@ -140,23 +107,18 @@ $(document).ready(function () {
     const result = evaluateTake(exam);
     const action = result.action;
 
-    // N / NN classification
-    if (action === "E") {
-      numeracySummary.N[gender]++;
-    } else {
-      numeracySummary.NN[gender]++;
-    }
+    if (action === "E") numeracySummary.N[gender]++;
+    else numeracySummary.NN[gender]++;
 
-    // Recommended Action summary
     actionSummary[action][gender]++;
   }
 
   function renderAllSummaries() {
-    // ===== PROFICIENCY =====
-    $("#hn_addition").text(summary.Addition.H);
-    $("#hn_subtraction").text(summary.Subtraction.H);
-    $("#hn_multiplication").text(summary.Multiplication.H);
-    $("#hn_division").text(summary.Division.H);
+    // UI summary (optional, depends on your HTML IDs)
+    $("#h_addition").text(summary.Addition.H);
+    $("#h_subtraction").text(summary.Subtraction.H);
+    $("#h_multiplication").text(summary.Multiplication.H);
+    $("#h_division").text(summary.Division.H);
 
     $("#m_addition").text(summary.Addition.M);
     $("#m_subtraction").text(summary.Subtraction.M);
@@ -168,7 +130,6 @@ $(document).ready(function () {
     $("#l_multiplication").text(summary.Multiplication.L);
     $("#l_division").text(summary.Division.L);
 
-    // ===== NUMERACY (N / NN) =====
     $("#n_male").text(numeracySummary.N.Male);
     $("#n_female").text(numeracySummary.N.Female);
     $("#n_total").text(numeracySummary.N.Male + numeracySummary.N.Female);
@@ -177,7 +138,6 @@ $(document).ready(function () {
     $("#nn_female").text(numeracySummary.NN.Female);
     $("#nn_total").text(numeracySummary.NN.Male + numeracySummary.NN.Female);
 
-    // ===== ACTION =====
     $("#e_male").text(actionSummary.E.Male);
     $("#e_female").text(actionSummary.E.Female);
     $("#e_total").text(actionSummary.E.Male + actionSummary.E.Female);
@@ -189,6 +149,12 @@ $(document).ready(function () {
     $("#i_male").text(actionSummary.I.Male);
     $("#i_female").text(actionSummary.I.Female);
     $("#i_total").text(actionSummary.I.Male + actionSummary.I.Female);
+  }
+
+  function getPL(score) {
+    if (score >= 9) return "H";
+    if (score >= 5) return "M";
+    return "L";
   }
 
   function getAction(pls) {
@@ -204,19 +170,12 @@ $(document).ready(function () {
       getPL(scores.correctQMultiplication),
       getPL(scores.correctQDivision),
     ];
-
-    return {
-      PLs: pls,
-      action: getAction(pls),
-    };
+    return { PLs: pls, action: getAction(pls) };
   }
 
-  function getPL(score) {
-    if (score >= 9) return "H";
-    if (score >= 5) return "M";
-    return "L";
-  }
-
+  // ==============================
+  // EXPORT TO EXCEL (UNCHANGED DESIGN)
+  // ==============================
   $("#export_excel").click(function () {
     if ($("#latest_take_exam_student_list tr").length === 0) {
       alert("No data available to export.");
@@ -227,14 +186,10 @@ $(document).ready(function () {
     const ws = {};
 
     let rowIndex = 0;
-
     function addRow(rowData, style = {}) {
       rowData.forEach((cell, colIndex) => {
         const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
-        ws[cellRef] = {
-          v: cell,
-          s: style,
-        };
+        ws[cellRef] = { v: cell, s: style };
       });
       rowIndex++;
     }
@@ -261,10 +216,7 @@ $(document).ready(function () {
       },
     };
 
-    // ===============================
-    // HEADER ROW 1
-    // ===============================
-
+    // --- HEADER ROWS ---
     addRow(
       [
         "No.",
@@ -282,11 +234,6 @@ $(document).ready(function () {
       ],
       headerStyle,
     );
-
-    // ===============================
-    // HEADER ROW 2
-    // ===============================
-
     addRow(
       [
         "",
@@ -308,53 +255,37 @@ $(document).ready(function () {
     ws["!merges"] = [
       { s: { r: 0, c: 0 }, e: { r: 1, c: 0 } },
       { s: { r: 0, c: 1 }, e: { r: 1, c: 1 } },
-
       { s: { r: 0, c: 2 }, e: { r: 0, c: 3 } },
       { s: { r: 0, c: 4 }, e: { r: 0, c: 5 } },
       { s: { r: 0, c: 6 }, e: { r: 0, c: 7 } },
       { s: { r: 0, c: 8 }, e: { r: 0, c: 9 } },
-
       { s: { r: 0, c: 10 }, e: { r: 1, c: 10 } },
       { s: { r: 0, c: 11 }, e: { r: 1, c: 11 } },
     ];
 
-    // ===============================
-    // STUDENT DATA (FIXED ACTION)
-    // ===============================
-
+    // --- STUDENT DATA ---
     $("#latest_take_exam_student_list tr").each(function () {
       let cells = $(this).find("td");
-
-      let rawNumeracy = $(cells[10]).text().trim();
-      let rawAction = $(cells[11]).text().trim();
-
-      let numeracyText = rawNumeracy === "N" ? "Numerate" : "Non-Numerate";
-
+      let numeracyText =
+        $(cells[10]).text().trim() === "N" ? "Numerate" : "Non-Numerate";
       let actionMap = {
         E: "Enhancement",
         C: "Consolidation",
         I: "Intervention",
       };
-
-      let actionText = actionMap[rawAction] || "";
-
+      let actionText = actionMap[$(cells[11]).text().trim()] || "";
       addRow(
         [
           $(cells[0]).text().trim(),
           $(cells[1]).text().trim(),
-
           $(cells[2]).text().trim(),
           convertPL($(cells[3]).text().trim()),
-
           $(cells[4]).text().trim(),
           convertPL($(cells[5]).text().trim()),
-
           $(cells[6]).text().trim(),
           convertPL($(cells[7]).text().trim()),
-
           $(cells[8]).text().trim(),
           convertPL($(cells[9]).text().trim()),
-
           numeracyText,
           actionText,
         ],
@@ -362,12 +293,8 @@ $(document).ready(function () {
       );
     });
 
+    // --- SUMMARY ---
     rowIndex += 2;
-
-    // ===============================
-    // SUMMARY: PROFICIENCY
-    // ===============================
-
     function addSummaryTitle(title) {
       addRow([title], headerStyle);
       ws["!merges"].push({
@@ -377,12 +304,10 @@ $(document).ready(function () {
     }
 
     addSummaryTitle("Summary Table for the Proficiency Level of the Class");
-
     addRow(
       ["", "Addition", "Subtraction", "Multiplication", "Division"],
       headerStyle,
     );
-
     addRow(
       [
         "No. of Highly Numerate Learners (High)",
@@ -393,7 +318,6 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     addRow(
       [
         "No. of Moderately Numerate Learners (Medium)",
@@ -404,7 +328,6 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     addRow(
       [
         "No. of Low Numerate Learners (Low)",
@@ -415,17 +338,10 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     rowIndex += 2;
 
-    // ===============================
-    // SUMMARY: NUMERACY
-    // ===============================
-
     addSummaryTitle("Summary for Numeracy Level of the Class");
-
     addRow(["Numeracy Level", "Male", "Female", "Total"], headerStyle);
-
     addRow(
       [
         "Numerate",
@@ -435,7 +351,6 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     addRow(
       [
         "Non-Numerate",
@@ -445,17 +360,10 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     rowIndex += 2;
 
-    // ===============================
-    // SUMMARY: ACTION
-    // ===============================
-
     addSummaryTitle("Summary for Recommended Action of the Class");
-
     addRow(["Recommended Action", "Male", "Female", "Total"], headerStyle);
-
     addRow(
       [
         "Enhancement",
@@ -465,7 +373,6 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     addRow(
       [
         "Consolidation",
@@ -475,7 +382,6 @@ $(document).ready(function () {
       ],
       centerStyle,
     );
-
     addRow(
       [
         "Intervention",
@@ -490,7 +396,6 @@ $(document).ready(function () {
       s: { r: 0, c: 0 },
       e: { r: rowIndex, c: 11 },
     });
-
     ws["!cols"] = new Array(12).fill({ wch: 18 });
 
     XLSX.utils.book_append_sheet(wb, ws, "Class Report");

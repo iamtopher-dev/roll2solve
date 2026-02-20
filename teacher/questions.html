@@ -129,7 +129,7 @@
                 </li>
                 <li>
                   <a
-                    href="/teacher/classrooms.html"
+                    href="/teacher/section.html"
                     class="menu-item group menu-item-active"
                   >
                     <svg
@@ -152,7 +152,7 @@
                       class="menu-item-text"
                       :class="sidebarToggle ? 'xl:hidden' : ''"
                     >
-                      Classrooms
+                      Section
                     </span>
                   </a>
                 </li>
@@ -475,7 +475,48 @@
                   </div>
                 </div>
               </div>
+<div class="pt-6">
+                <div
+                  class="bg-white p-6 rounded-xl custom-scrollbar max-w-full overflow-x-auto overflow-y-auto px-5 sm:px-6 h-[600px]"
 
+                >
+                  <table class="min-w-full">
+                    <thead
+                      class="border-y border-gray-100 py-3 dark:border-gray-800"
+                    >
+                      <th
+                        class="py-3 pr-5 font-normal whitespace-nowrap sm:pr-6"
+                      >
+                        <div class="flex items-center">
+                          <p
+                            class="text-theme-sm text-gray-500 dark:text-gray-400"
+                          >
+                            Name
+                          </p>
+                        </div>
+                      </th>
+                      <th
+                        class="px-5 py-3 font-normal whitespace-nowrap sm:px-6"
+                      >
+                        <div class="flex items-center">
+                          <p
+                            class="text-theme-sm text-gray-500 dark:text-gray-400"
+                          >
+                            Score
+                          </p>
+                        </div>
+                      </th>
+                      
+                      
+                      
+                    </thead>
+                    <tbody
+                      class="divide-y divide-gray-100 dark:divide-gray-800"
+                      id="listOfStudentsScoreTable"
+                    ></tbody>
+                  </table>
+                </div>
+              </div>
               <div class="pt-6">
                 <div
                   class="bg-white p-6 rounded-xl custom-scrollbar max-w-full overflow-x-auto overflow-y-visible px-5 sm:px-6"

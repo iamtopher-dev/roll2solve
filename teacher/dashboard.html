@@ -144,7 +144,7 @@
                       class="menu-item-text"
                       :class="sidebarToggle ? 'xl:hidden' : ''"
                     >
-                      Classrooms
+                      Section
                     </span>
                   </a>
                 </li>
@@ -367,6 +367,7 @@
                         </div>
                       </div>
                     </div>
+                    <div id="chartsContainer" style="display:flex; flex-wrap:wrap;"></div>
                   </div>
                 </div>
               </div>
@@ -395,6 +396,9 @@
     <script src="/assets/js/Global.js"></script>
 
     <script src="/assets/js/firebase.js"></script>
-    <script src="/assets/js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="/assets/js/teacher/dashboard.js"></script>
+
   </body>
 </html>

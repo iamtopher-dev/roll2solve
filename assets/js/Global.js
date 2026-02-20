@@ -16,4 +16,7 @@ $(document).ready(function () {
   $("#manage_quiz_btn").on("click", function () {
     window.location.href = `/teacher/quiz.html?id=${id}`;
   });
+  $("#leaderboard_btn").on("click", function () {
+    window.location.href = `/teacher/leaderboard.html?id=${id}`;
+  });
 });

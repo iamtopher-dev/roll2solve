@@ -28,7 +28,7 @@ $(document).ready(function () {
               href="/teacher/student_list.html?id=${id}"
               class="manageClassroom mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600"
             >
-              Manage
+              Manage/View
             </a>
           </div>
         </div>

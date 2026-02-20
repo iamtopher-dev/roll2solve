@@ -5,57 +5,97 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
+  let allStudents = {};
+  let classroomName = "";
+
+  // ==============================
+  // LOAD CLASSROOM
+  // ==============================
   database.ref(`classrooms/${id}`).on("value", function (snapshot) {
     const classroom = snapshot.val();
+    if (!classroom) return;
 
-    database.ref(`users`).on("value", function (snapshot) {
-      const students = snapshot.val();
-      $("#studentsListTable").empty();
-
-      if (!students) return;
-
-      $.each(students, function (userId, student) {
-        console.log(student);
-        if (
-          student.role === "student" &&
-          student.classroom === classroom.classroom_name
-        ) {
-          const actionColor =
-            {
-              Enhancement: "bg-success-500",
-              Consolidation: "bg-warning-500",
-              Intervention: "bg-error-500",
-            }[student.current_action] || "bg-gray-500";
-          $("#studentsListTable").append(`
-            <tr>
-              <td class="py-3 pr-5 whitespace-nowrap">
-                <span class="font-medium text-gray-700">
-                  ${student.first_name} ${student.last_name}
-                </span>
-              </td>
-
-              <td class="px-5 py-3 whitespace-nowrap">
-                <span class="rounded-full ${actionColor} px-3 py-1 text-white text-sm">
-  ${student.current_action}
-</span>
-              </td>
-
-              <td class="px-5 py-3 whitespace-nowrap">
-                <button 
-                  id="viewStatisticsBtn"
-                  data-userid="${userId}"
-                  class="rounded-lg bg-white px-4 py-2 text-sm shadow ring-1 ring-gray-300 hover:bg-gray-50">
-                  View Statistics
-                </button>
-              </td>
-            </tr>
-          `);
-        }
-      });
-    });
+    classroomName = classroom.classroom_name;
+    $("#sectionDisplay").text(`Students in ${classroomName}`);
   });
 
-  $("#studentsListTable").on("click", "#viewStatisticsBtn", function () {
+  // ==============================
+  // LOAD USERS
+  // ==============================
+  database.ref(`users`).on("value", function (snapshot) {
+    allStudents = snapshot.val() || {};
+    renderStudents();
+  });
+
+  // ==============================
+  // FILTER CHANGE LISTENER
+  // ==============================
+  $("#filterAction, #filterGender").on("change", function () {
+    renderStudents();
+  });
+
+  // ==============================
+  // RENDER STUDENTS FUNCTION
+  // ==============================
+  function renderStudents() {
+    const selectedAction = $("#filterAction").val();
+    const selectedGender = $("#filterGender").val();
+
+    $("#studentsListTable").empty();
+
+    $.each(allStudents, function (userId, student) {
+      if (
+        student.role === "student" &&
+        student.classroom === classroomName
+      ) {
+        // Filter Action
+        if (selectedAction && student.current_action !== selectedAction) {
+          return;
+        }
+
+        // Filter Gender
+        if (selectedGender && student.gender !== selectedGender) {
+          return;
+        }
+
+        const actionColor =
+          {
+            Enhancement: "bg-success-500",
+            Consolidation: "bg-warning-500",
+            Intervention: "bg-error-500",
+          }[student.current_action] || "bg-gray-500";
+
+        $("#studentsListTable").append(`
+          <tr>
+            <td class="py-3 pr-5 whitespace-nowrap">
+              <span class="font-medium text-gray-700">
+                ${student.first_name} ${student.last_name}
+              </span>
+            </td>
+
+            <td class="px-5 py-3 whitespace-nowrap">
+              <span class="rounded-full ${actionColor} px-3 py-1 text-white text-sm">
+                ${student.current_action}
+              </span>
+            </td>
+
+            <td class="px-5 py-3 whitespace-nowrap">
+              <button 
+                class="viewStatisticsBtn rounded-lg bg-white px-4 py-2 text-sm shadow ring-1 ring-gray-300 hover:bg-gray-50"
+                data-userid="${userId}">
+                View Statistics
+              </button>
+            </td>
+          </tr>
+        `);
+      }
+    });
+  }
+
+  // ==============================
+  // VIEW STATISTICS BUTTON
+  // ==============================
+  $("#studentsListTable").on("click", ".viewStatisticsBtn", function () {
     const userId = $(this).data("userid");
 
     $("#viewStatisticsModal").fadeIn(200, function () {
@@ -69,12 +109,17 @@ $(document).ready(function () {
     $("#viewStatisticsModal").fadeOut(150);
   });
 
+  // ==============================
+  // LOAD STUDENT SUMMARY
+  // ==============================
   function loadStudentStats(userId) {
     database.ref("player_data").once("value", function (snapshot) {
       const data = snapshot.val();
       if (!data) return;
 
-      const records = Object.values(data).filter((r) => r.user_id === userId);
+      const records = Object.values(data).filter(
+        (r) => r.user_id === userId
+      );
 
       if (records.length === 0) return;
 
@@ -139,6 +184,9 @@ $(document).ready(function () {
     });
   }
 
+  // ==============================
+  // QUIZ PERFORMANCE GRAPH
+  // ==============================
   function renderAllQuizGraph(userId) {
     const ctx = document.getElementById("myChart").getContext("2d");
 
@@ -146,7 +194,9 @@ $(document).ready(function () {
       const data = snapshot.val();
       if (!data) return;
 
-      const records = Object.values(data).filter((r) => r.user_id === userId);
+      const records = Object.values(data).filter(
+        (r) => r.user_id === userId
+      );
 
       if (records.length === 0) return;
 
@@ -154,7 +204,7 @@ $(document).ready(function () {
 
       records.forEach((r) => {
         if (!quizMap[r.quiz_id]) {
-          quizMap[r.quiz_id] = { correct: 0, total: 0 };
+          quizMap[r.quiz_id] = { correct: 0 };
         }
 
         quizMap[r.quiz_id].correct +=
@@ -162,21 +212,14 @@ $(document).ready(function () {
           (r.correctQSubtraction || 0) +
           (r.correctQMultiplication || 0) +
           (r.correctQDivision || 0);
-
-        quizMap[r.quiz_id].total +=
-          (r.totalQAddition || 0) +
-          (r.totalQSubtraction || 0) +
-          (r.totalQMultiplication || 0) +
-          (r.totalQDivision || 0);
       });
 
       const labels = [];
       const values = [];
 
       Object.keys(quizMap).forEach((quizId, index) => {
-        const q = quizMap[quizId];
         labels.push(`Quiz ${index + 1}`);
-        values.push(q.correct);
+        values.push(quizMap[quizId].correct);
       });
 
       if (performanceChart) performanceChart.destroy();
@@ -199,81 +242,79 @@ $(document).ready(function () {
         options: {
           responsive: true,
           scales: {
-            y: {
-              beginAtZero: true,
-            },
+            y: { beginAtZero: true },
           },
         },
       });
     });
   }
 
+  // ==============================
+  // EXAM TABLE
+  // ==============================
   function show_dunt_by_user(user_id) {
     $("#list_take_student_exam").empty();
+
     firebase
       .database()
       .ref("player_data_exam")
-      .on("value", function (snapshot) {
+      .once("value", function (snapshot) {
         const player_data_exam = snapshot.val();
-        let takeCount = {};
+        if (!player_data_exam) return;
 
         $.each(player_data_exam, function (id, exam) {
           if (exam.user_id === user_id) {
-            if (!takeCount[user_id]) takeCount[user_id] = 1;
-            else takeCount[user_id] += 1;
-
-            let takeText = exam.typeExam
-              
-            $("#list_take_student_exam").append(`<tr>
-  <td class="border border-gray-300 py-2 px-3 text-center text-sm">
-    ${takeText}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${exam.correctQAddition || 0}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${getPL(exam.correctQAddition)}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${exam.correctQSubtraction || 0}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${getPL(exam.correctQSubtraction)}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${exam.correctQMultiplication || 0}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${getPL(exam.correctQMultiplication)}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${exam.correctQDivision || 0}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-    ${exam.correctQDivision >= 9 ? "H" : exam.correctQDivision >= 5 ? "M" : "L"}
-  </td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-  ${
-    exam.correctQAddition < 5 ||
-    exam.correctQSubtraction < 5 ||
-    exam.correctQMultiplication < 5
-      ? "NN"
-      : "N"
-  }
-</td>
-  <td class="border border-gray-300 py-2 px-3 text-center">
-  ${evaluateTake(exam).action}
-  </td>
-</tr>`);
+            $("#list_take_student_exam").append(`
+              <tr>
+                <td class="border py-2 px-3 text-center text-sm">
+                  ${exam.typeExam}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${exam.correctQAddition || 0}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${getPL(exam.correctQAddition)}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${exam.correctQSubtraction || 0}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${getPL(exam.correctQSubtraction)}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${exam.correctQMultiplication || 0}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${getPL(exam.correctQMultiplication)}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${exam.correctQDivision || 0}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${getPL(exam.correctQDivision)}
+                </td>
+                <td class="border py-2 px-3 text-center">
+                  ${evaluateTake(exam).action}
+                </td>
+              </tr>
+            `);
           }
         });
       });
   }
+
+  function getPL(score) {
+    if (score >= 9) return "H";
+    if (score >= 5) return "M";
+    return "L";
+  }
+
   function getAction(pls) {
     if (pls.includes("L")) return "I";
     if (pls.includes("M")) return "C";
     return "E";
   }
+
   function evaluateTake(scores) {
     const pls = [
       getPL(scores.correctQAddition),
@@ -286,10 +327,5 @@ $(document).ready(function () {
       PLs: pls,
       action: getAction(pls),
     };
-  }
-  function getPL(score) {
-    if (score >= 9) return "H";
-    if (score >= 5) return "M";
-    return "L";
   }
 });

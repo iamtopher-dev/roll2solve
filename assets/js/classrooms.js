@@ -192,6 +192,7 @@ $(document).ready(function () {
     const data = {
       classroom_name: $("#classroomName").val(),
       teachers: $("#teachers").val(),
+      school: $("#schoolSelect").val(),
       created_at: firebase.database.ServerValue.TIMESTAMP,
     };
     firebase
@@ -256,5 +257,16 @@ $(document).ready(function () {
       persist: false,
       placeholder: "Select teachers...",
     });
+  });
+
+  database.ref("schools").on("value", function (snapshot) {
+    const schools = snapshot.val();
+    console.log(schools);
+    if (schools) {
+      $.each(schools, function (id, school) {
+        var option = `<option value="${school.school_name}" class="text-gray-700 dark:bg-gray-900 dark:text-gray-400" > ${school.school_name} </option>`;
+        $("#schoolSelect").append(option);
+      });
+    }
   });
 });
