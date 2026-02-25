@@ -110,12 +110,6 @@ $(document).ready(function () {
   // LOAD STUDENT SUMMARY
   // ==============================
   function loadStudentStats(userId) {
-    database.ref(`users/${userId}`).once("value", function (snapshot) {
-      const student = snapshot.val();
-      if (!student) return;
-      $("#studentName").text(`${student.first_name} ${student.last_name}`);
-      $("#studentSection").text(`${student.classroom}`);
-    });
     database.ref("player_data").once("value", function (snapshot) {
       const data = snapshot.val();
       if (!data) return;
@@ -304,6 +298,7 @@ $(document).ready(function () {
                 <td class="border py-2 px-3 text-center">
                   ${evaluateTake(exam).action}
                 </td>
+                
               </tr>
             `);
           }

@@ -4,7 +4,7 @@ $(document).ready(function () {
   const userLogged = JSON.parse(localStorage.getItem("loggedInUser"));
 
   // ========================================
-  // ADD QUESTION
+  // ADD QUESTION (WITH MAX 10 VALIDATION)
   // ========================================
   $("#addQuestionBtn").on("click", function () {
     const question = $("#question").val().trim();
@@ -15,22 +15,45 @@ $(document).ready(function () {
     if (!answer) return alert("Answer is required");
     if (!operator_type) return alert("Operator type is required");
 
-    const data = {
-      question: question,
-      answer: answer,
-      operator_type: operator_type,
-      created_at: firebase.database.ServerValue.TIMESTAMP,
-    };
-
     firebase
       .database()
       .ref("exam")
-      .push(data)
-      .then(() => {
+      .once("value")
+      .then((snapshot) => {
+        const questions = snapshot.val();
+        let operatorCount = 0;
+
+        if (questions) {
+          $.each(questions, function (id, q) {
+            if (q.operator_type?.toLowerCase() === operator_type) {
+              operatorCount++;
+            }
+          });
+        }
+
+        // 🚨 MAXIMUM 10 VALIDATION
+        if (operatorCount >= 10) {
+          alert("Maximum of 10 questions allowed for " + operator_type);
+          return null; // stop execution
+        }
+
+        const data = {
+          question: question,
+          answer: answer,
+          operator_type: operator_type,
+          created_at: firebase.database.ServerValue.TIMESTAMP,
+        };
+
+        return firebase.database().ref("exam").push(data);
+      })
+      .then((result) => {
+        if (!result) return; // if validation stopped it
+
         $("#question").val("");
         $("#answer").val("");
         $("#operator_type").val("");
         $("#addQuestionModal").hide();
+
         console.log("Question added successfully");
       })
       .catch((error) => {
@@ -47,7 +70,7 @@ $(document).ready(function () {
     .on("value", function (snapshot) {
       const questions = snapshot.val();
 
-      // Clear all tables first
+      // Clear all tables
       $("#additionTable").empty();
       $("#subtractionTable").empty();
       $("#multiplicationTable").empty();
@@ -61,7 +84,6 @@ $(document).ready(function () {
         return;
       }
 
-      // Counters per operator
       const counters = {
         addition: 0,
         subtraction: 0,
@@ -99,7 +121,6 @@ $(document).ready(function () {
           </tr>
         `;
 
-        // Append to correct table
         if (operator === "addition") {
           $("#additionTable").append(rowHTML);
         } else if (operator === "subtraction") {
@@ -129,7 +150,6 @@ $(document).ready(function () {
       .once("value")
       .then((snapshot) => {
         const settings = snapshot.val();
-
         const isPost = settings && settings.type === "Post-Test";
         document.getElementById("testToggle").checked = isPost;
 
